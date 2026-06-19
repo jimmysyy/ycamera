@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="摄影作品展示">
+  <title>Photography</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
+</head>
+<body>
+
+  <!-- ===== 固定页眉 ===== -->
+  <header class="site-header" id="header">
+    <div class="header-inner">
+      <img
+        class="avatar"
+        src="images/avatar.svg"
+        alt="Avatar"
+        width="44"
+        height="44"
+        loading="eager"
+        onerror="this.style.display='none'"
+      >
+      <h1 class="site-title">Photography</h1>
+    </div>
+  </header>
+
+  <!-- ===== 瀑布流照片墙 ===== -->
+  <main class="masonry" id="masonry" aria-label="摄影作品瀑布流">
+    <!-- 由 JS 动态渲染 -->
+  </main>
+
+  <!-- ===== 固定页脚 ===== -->
+  <footer class="site-footer" id="footer">
+    <div class="footer-inner" id="footer-links">
+      <!-- 由 JS 动态渲染 -->
+    </div>
+  </footer>
+
+  <!-- ===== 灯箱覆盖层 ===== -->
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="照片查看器">
+    <!-- 毛玻璃背景层 -->
+    <div class="lightbox-backdrop"></div>
+
+    <!-- 关闭按钮 -->
+    <button class="lightbox-close" id="lightbox-close" aria-label="关闭">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- 上一张 -->
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="上一张">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+
+    <!-- 下一张 -->
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="下一张">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+
+    <!-- 灯箱内容区 -->
+    <div class="lightbox-content" id="lightbox-content">
+      <div class="lightbox-image-wrap">
+        <img id="lightbox-img" src="" alt="" loading="eager">
+      </div>
+      <div class="lightbox-params" id="lightbox-params">
+        <!-- 由 JS 动态渲染 -->
+      </div>
+    </div>
+
+    <!-- 照片计数器 -->
+    <div class="lightbox-counter" id="lightbox-counter"></div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

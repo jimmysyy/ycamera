@@ -1,0 +1,593 @@
+/* ============================================
+   摄影作品展示网站 — 苹果极简风格
+   ============================================ */
+
+/* ---- CSS 变量 ---- */
+:root {
+  /* 颜色 */
+  --bg: #f5f5f7;
+  --text: #1d1d1f;
+  --text-secondary: #86868b;
+  --text-tertiary: #aeaeb2;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --glass-bg: rgba(245, 245, 247, 0.72);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --lightbox-bg: rgba(0, 0, 0, 0.55);
+  --lightbox-param-bg: rgba(255, 255, 255, 0.06);
+  --divider: rgba(0, 0, 0, 0.08);
+
+  /* 间距 */
+  --header-height: 64px;
+  --footer-height: 56px;
+  --masonry-gap: 16px;
+  --content-padding: 20px;
+  --card-radius: 12px;
+  --lightbox-padding: 40px;
+
+  /* 模糊 */
+  --header-blur: 20px;
+  --lightbox-blur: 30px;
+
+  /* 过渡 */
+  --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* 字体 */
+  --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue",
+    Helvetica, Arial, sans-serif;
+}
+
+/* ---- 重置 & 基础 ---- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-stack);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+  /* 为固定页眉/页脚留出空间 */
+  padding-top: calc(var(--header-height) + var(--content-padding));
+  padding-bottom: calc(var(--footer-height) + var(--content-padding));
+  overflow-x: hidden;
+}
+
+/* ---- 固定页眉 ---- */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--header-blur));
+  -webkit-backdrop-filter: blur(var(--header-blur));
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-smooth);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 var(--content-padding);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--text-tertiary);
+}
+
+.site-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ---- 瀑布流 ---- */
+.masonry {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  column-count: 4;
+  column-gap: var(--masonry-gap);
+}
+
+/* 瀑布流卡片 */
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: var(--masonry-gap);
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+  cursor: pointer;
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.masonry-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-hover-shadow);
+}
+
+.masonry-item:active {
+  transform: scale(0.985);
+  transition: transform 0.1s ease;
+}
+
+.masonry-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* 初始模糊占位效果 */
+  background: var(--text-tertiary);
+  transition: opacity 0.3s ease;
+}
+
+.masonry-item img.loaded {
+  opacity: 1;
+}
+
+/* ---- 固定页脚 ---- */
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--footer-height);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--header-blur));
+  -webkit-backdrop-filter: blur(var(--header-blur));
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  max-width: 1400px;
+  width: 100%;
+  padding: 0 var(--content-padding);
+  justify-content: center;
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  color: var(--text-secondary);
+  border-radius: 50%;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.footer-link:hover {
+  color: var(--accent);
+  background: rgba(0, 113, 227, 0.06);
+}
+
+.footer-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---- 灯箱 ---- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-smooth), visibility 0s 0.35s;
+}
+
+.lightbox.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--transition-smooth), visibility 0s 0s;
+}
+
+/* 毛玻璃背景 */
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--lightbox-bg);
+  backdrop-filter: blur(var(--lightbox-blur));
+  -webkit-backdrop-filter: blur(var(--lightbox-blur));
+}
+
+/* 关闭按钮 */
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+}
+
+.lightbox-close:active {
+  transform: scale(0.95);
+}
+
+/* 导航按钮 */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background var(--transition-fast), transform var(--transition-fast),
+    opacity var(--transition-fast);
+}
+
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.lightbox-nav:active {
+  transform: translateY(-50%) scale(0.94);
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
+/* 灯箱内容 */
+.lightbox-content {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+  max-width: calc(100vw - var(--lightbox-padding) * 2);
+  max-height: calc(100vh - var(--lightbox-padding) * 2);
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--lightbox-padding);
+}
+
+.lightbox-image-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.lightbox-image-wrap img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: scale(0.92);
+  transition: opacity var(--transition-smooth), transform var(--transition-spring);
+}
+
+.lightbox.active .lightbox-image-wrap img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* 参数面板 */
+.lightbox-params {
+  flex: 0 0 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+  opacity: 0;
+  transform: translateX(12px);
+  transition: opacity var(--transition-smooth) 0.1s, transform var(--transition-smooth) 0.1s;
+}
+
+.lightbox.active .lightbox-params {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.param-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.param-item:last-child {
+  border-bottom: none;
+}
+
+.param-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.02em;
+}
+
+.param-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: right;
+  letter-spacing: -0.01em;
+}
+
+.photo-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--transition-smooth) 0.15s, transform var(--transition-smooth) 0.15s;
+}
+
+.lightbox.active .photo-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 照片计数器 */
+.lightbox-counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =============================================
+   响应式 - 平板竖屏
+   ============================================= */
+@media (max-width: 1024px) {
+  .masonry {
+    column-count: 3;
+  }
+
+  .lightbox-content {
+    gap: 24px;
+    padding: 0 24px;
+  }
+
+  .lightbox-params {
+    flex: 0 0 180px;
+  }
+}
+
+/* =============================================
+   响应式 - 平板 & 大手机
+   ============================================= */
+@media (max-width: 768px) {
+  :root {
+    --header-height: 56px;
+    --footer-height: 52px;
+    --masonry-gap: 12px;
+    --content-padding: 16px;
+  }
+
+  .masonry {
+    column-count: 2;
+  }
+
+  .site-title {
+    font-size: 18px;
+  }
+
+  /* 竖屏：灯箱切换为纵向布局 */
+  .lightbox-content {
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 16px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .lightbox-image-wrap {
+    flex: 0 1 auto;
+    height: auto;
+    max-height: 50vh;
+  }
+
+  .lightbox-params {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 400px;
+    transform: translateY(12px);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .lightbox.active .lightbox-params {
+    transform: translateY(0);
+  }
+
+  .param-item {
+    flex: 1 1 50%;
+    padding: 8px 0;
+  }
+
+  .photo-title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .lightbox-prev { left: 8px; }
+  .lightbox-next { right: 8px; }
+
+  .lightbox-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lightbox-nav svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .lightbox-close {
+    top: 12px;
+    right: 12px;
+  }
+}
+
+/* =============================================
+   响应式 - 小手机
+   ============================================= */
+@media (max-width: 480px) {
+  :root {
+    --header-height: 52px;
+    --footer-height: 48px;
+    --masonry-gap: 8px;
+    --content-padding: 12px;
+  }
+
+  .masonry {
+    column-count: 2;
+  }
+
+  .site-title {
+    font-size: 16px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .header-inner {
+    gap: 10px;
+  }
+
+  .footer-inner {
+    gap: 20px;
+  }
+
+  .lightbox-params {
+    max-width: 100%;
+  }
+
+  .param-label {
+    font-size: 12px;
+  }
+
+  .param-value {
+    font-size: 13px;
+  }
+}
+
+/* =============================================
+   响应式 - 大屏幕
+   ============================================= */
+@media (min-width: 1441px) {
+  .masonry {
+    column-count: 5;
+  }
+}
+
+/* =============================================
+   辅助类
+   ============================================= */
+/* 页面加载时的入场动画 */
+.masonry-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 防止灯箱打开时页面滚动 */
+body.lightbox-open {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* 选择文本颜色 */
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
