@@ -8,23 +8,27 @@
 const iconSVGs = {
   instagram:
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>',
-  twitter:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l6.5 7.5L4 20h1.5l5.5-6.5L16.5 20H20l-7-8.5L19.5 4h-1.5L12 11 6 4z"/></svg>',
+  // twitter:
+    // '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l6.5 7.5L4 20h1.5l5.5-6.5L16.5 20H20l-7-8.5L19.5 4h-1.5L12 11 6 4z"/></svg>',
   "500px":
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-5"/></svg>',
-  github:
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
+  // github:
+    // '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>',
+  xiaohongshu:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h2v8H8z"/><path d="M12 8h4v4"/><circle cx="14" cy="9" r="1.5"/></svg>',
+  weibo:
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="9" r="4"/><circle cx="10.5" cy="8" r="1.5"/><path d="M6 15.5c1.5 2 4 3 6 3s4.5-1 6-3"/></svg>',
 };
 
-// 图片加载失败占位图
+// 图片加载失败占位
 const ERROR_PLACEHOLDER =
   "data:image/svg+xml," +
   encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect fill="#2c2c2e" width="400" height="300"/><text fill="#86868b" x="200" y="145" text-anchor="middle" font-family="sans-serif" font-size="16">图片加载失败</text><text fill="#aeaeb2" x="200" y="170" text-anchor="middle" font-family="sans-serif" font-size="12">请检查网络或图床连接</text></svg>'
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300"><rect fill="#1c1c1e" width="400" height="300"/><text fill="#636366" x="200" y="142" text-anchor="middle" font-family="sans-serif" font-size="15">图片加载失败</text><text fill="#48484a" x="200" y="166" text-anchor="middle" font-family="sans-serif" font-size="11">请检查网络或图床连接</text></svg>'
   );
 
 // ==========================================
-// 1. 运行时数据（从 JSON 加载）
+// 1. 运行时数据
 // ==========================================
 let photos = [];
 let socialLinks = [];
@@ -48,12 +52,35 @@ let touchStartX = 0;
 let touchStartY = 0;
 let touchMoved = false;
 
-// 图片加载超时控制
+// 图片加载超时
 let imageLoadTimer = null;
-const IMAGE_LOAD_TIMEOUT = 15000; // 15 秒超时
+const IMAGE_LOAD_TIMEOUT = 15000;
+
+// 图片预加载缓存
+const preloadCache = new Set();
+const preloader = document.createElement("img");
+preloader.style.display = "none";
+document.body.appendChild(preloader);
 
 // ==========================================
-// 3. 数据加载
+// 3. 参数映射（中文 key → 布局位置）
+// ==========================================
+const PARAM_KEY_MAP = {
+  相机: "camera",
+  光圈: "aperture",
+  焦段: "focal",
+  快门: "shutter",
+  ISO: "iso",
+  地点: "location",
+  日期: "date",
+};
+
+function getParam(params, key) {
+  return params[key] || "";
+}
+
+// ==========================================
+// 4. 数据加载
 // ==========================================
 async function loadData() {
   try {
@@ -64,14 +91,13 @@ async function loadData() {
     socialLinks = data.socialLinks || [];
   } catch (err) {
     console.error("加载数据失败:", err);
-    // 降级：空数组，页面显示空状态
     photos = [];
     socialLinks = [];
   }
 }
 
 // ==========================================
-// 4. 渲染页脚
+// 5. 渲染页脚
 // ==========================================
 function renderFooter() {
   footerEl.innerHTML = socialLinks
@@ -80,77 +106,95 @@ function renderFooter() {
         iconSVGs[link.icon] ||
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/></svg>';
       return `
-    <a
-      class="footer-link"
-      href="${link.url}"
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="${link.name}"
-      title="${link.name}"
-    >
+    <a class="footer-link" href="${link.url}" target="_blank"
+       rel="noopener noreferrer" aria-label="${link.name}" title="${link.name}">
       ${svg}
-    </a>
-  `;
+    </a>`;
     })
     .join("");
 }
 
 // ==========================================
-// 5. 渲染瀑布流
+// 6. 渲染瀑布流 + Scroll Reveal
 // ==========================================
 function renderMasonry() {
   if (photos.length === 0) {
     masonryEl.innerHTML =
-      '<p style="grid-column:1/-1;text-align:center;color:var(--text-secondary);padding:60px 0;">暂无照片</p>';
+      '<p style="text-align:center;color:var(--text-secondary);padding:80px 0;grid-column:1/-1;font-size:15px;">暂无照片</p>';
     return;
   }
 
   masonryEl.innerHTML = photos
     .map(
       (photo, index) => `
-    <div
-      class="masonry-item"
-      data-index="${index}"
-      style="animation-delay: ${index * 0.05}s"
-      role="button"
-      tabindex="0"
-      aria-label="查看照片: ${photo.title}"
-    >
-      <img
-        src="${photo.thumbnail}"
-        alt="${photo.title}"
-        loading="lazy"
-        data-index="${index}"
-      >
-    </div>
-  `
+    <div class="masonry-item" data-index="${index}"
+         role="button" tabindex="0"
+         aria-label="查看照片: ${photo.title}">
+      <div class="img-wrapper">
+        <img src="${photo.thumbnail}" alt="${photo.title}"
+             loading="lazy" data-index="${index}">
+      </div>
+    </div>`
     )
     .join("");
 
-  // 事件委托：点击卡片打开灯箱
+  // --- 图片加载完成 → 隐藏骨架屏、触发绽放 ---
+  masonryEl.querySelectorAll("img").forEach((img) => {
+    img.addEventListener("load", () => {
+      img.classList.add("loaded");
+      const wrapper = img.closest(".img-wrapper");
+      if (wrapper) wrapper.classList.add("loaded");
+    });
+    // 如果图片已经被缓存并立即加载
+    if (img.complete && img.naturalWidth > 0) {
+      img.classList.add("loaded");
+      const wrapper = img.closest(".img-wrapper");
+      if (wrapper) wrapper.classList.add("loaded");
+    }
+  });
+
+  // --- IntersectionObserver 滚动入场 ---
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    {
+      threshold: 0.1,
+      rootMargin: "0px 0px -30px 0px",
+    }
+  );
+
+  masonryEl.querySelectorAll(".masonry-item").forEach((item) => {
+    observer.observe(item);
+  });
+
+  // --- 事件委托 ---
   masonryEl.addEventListener("click", (e) => {
     const item = e.target.closest(".masonry-item");
     if (!item) return;
-    const index = parseInt(item.dataset.index, 10);
-    openLightbox(index);
+    openLightbox(parseInt(item.dataset.index, 10));
   });
 
-  // 键盘无障碍
   masonryEl.addEventListener("keydown", (e) => {
     if (e.key !== "Enter" && e.key !== " ") return;
     const item = e.target.closest(".masonry-item");
     if (!item) return;
     e.preventDefault();
-    const index = parseInt(item.dataset.index, 10);
-    openLightbox(index);
+    openLightbox(parseInt(item.dataset.index, 10));
   });
 }
 
 // ==========================================
-// 6. 灯箱逻辑
+// 7. 灯箱逻辑
 // ==========================================
 function openLightbox(index) {
   currentPhotoIndex = index;
+  preloadNeighbors();
   updateLightboxContent();
   lightboxEl.classList.add("active");
   lightboxEl.setAttribute("aria-hidden", "false");
@@ -164,24 +208,34 @@ function closeLightbox() {
   document.body.classList.remove("lightbox-open");
   document.removeEventListener("keydown", handleLightboxKeyboard);
   clearImageLoadTimer();
-  // 延迟清除图片，避免过渡闪烁
   setTimeout(() => {
     lightboxImg.src = "";
-  }, 400);
+  }, 450);
 }
 
-function setLightboxImage(url) {
-  // 清除之前的超时计时器
-  clearImageLoadTimer();
+// --- 预加载前后图片 ---
+function preloadNeighbors() {
+  [currentPhotoIndex - 1, currentPhotoIndex + 1].forEach((i) => {
+    if (i < 0 || i >= photos.length) return;
+    const url = photos[i].full;
+    if (preloadCache.has(url)) return;
+    preloadCache.add(url);
+    // 使用临时 Image 对象预加载
+    const tmp = new Image();
+    tmp.src = url;
+  });
+}
 
-  // 设置图片源
+// --- 图片加载与超时 ---
+function setLightboxImage(url) {
+  clearImageLoadTimer();
+  lightboxImg.classList.add("switching");
   lightboxImg.src = url;
 
-  // 启动 15 秒加载超时 —— 超时后才显示加载失败
   imageLoadTimer = setTimeout(() => {
-    // 检查图片是否已经成功加载
     if (!lightboxImg.complete || lightboxImg.naturalWidth === 0) {
       lightboxImg.src = ERROR_PLACEHOLDER;
+      lightboxImg.classList.remove("switching");
     }
   }, IMAGE_LOAD_TIMEOUT);
 }
@@ -193,45 +247,57 @@ function clearImageLoadTimer() {
   }
 }
 
+// --- 更新灯箱内容（编辑排版参数面板） ---
 function updateLightboxContent() {
   const photo = photos[currentPhotoIndex];
   if (!photo) return;
 
-  // 设置图片（含超时控制）
   setLightboxImage(photo.full);
   lightboxImg.alt = photo.title;
 
-  // 更新参数面板
-  const params = photo.params;
-  const paramKeys = Object.keys(params);
+  const p = photo.params;
+  const camera = getParam(p, "相机");
+  const aperture = getParam(p, "光圈");
+  const focal = getParam(p, "焦段");
+  const shutter = getParam(p, "快门");
+  const iso = getParam(p, "ISO");
+  const location = getParam(p, "地点");
+  const date = getParam(p, "日期");
 
+  // 编辑排版风格的参数面板
   lightboxParams.innerHTML = `
     <div class="photo-title">${photo.title}</div>
-    ${paramKeys
-      .map(
-        (key) => `
-      <div class="param-item">
-        <span class="param-label">${key}</span>
-        <span class="param-value">${params[key]}</span>
-      </div>
-    `
-      )
-      .join("")}
+    <div class="param-divider"></div>
+    <div class="param-line primary">
+      ${camera ? `<span class="param-camera">${camera}</span>` : ""}
+      ${camera && aperture ? `<span class="param-sep">·</span>` : ""}
+      ${aperture ? `<span class="param-aperture">${aperture}</span>` : ""}
+    </div>
+    <div class="param-line secondary">
+      ${focal ? `<span class="param-focal">${focal}</span>` : ""}
+      ${focal && iso ? `<span class="param-sep">·</span>` : ""}
+      ${iso ? `<span class="param-iso">ISO ${iso}</span>` : ""}
+      ${(focal || iso) && shutter ? `<span class="param-sep">·</span>` : ""}
+      ${shutter ? `<span class="param-shutter">${shutter}</span>` : ""}
+    </div>
+    <div class="param-divider-bottom"></div>
+    <div class="param-line meta">
+      ${location ? `<span class="param-location">${location}</span>` : ""}
+      ${location && date ? `<span class="param-sep">·</span>` : ""}
+      ${date ? `<span class="param-date">${date}</span>` : ""}
+    </div>
   `;
 
-  // 更新计数器
   lightboxCounter.textContent = `${currentPhotoIndex + 1} / ${photos.length}`;
-
-  // 更新导航按钮状态
   updateNavButtons();
 }
 
 function updateNavButtons() {
-  lightboxPrev.style.opacity = currentPhotoIndex === 0 ? "0.3" : "1";
+  lightboxPrev.style.opacity = currentPhotoIndex === 0 ? "0.25" : "1";
   lightboxPrev.style.pointerEvents = currentPhotoIndex === 0 ? "none" : "auto";
 
   lightboxNext.style.opacity =
-    currentPhotoIndex === photos.length - 1 ? "0.3" : "1";
+    currentPhotoIndex === photos.length - 1 ? "0.25" : "1";
   lightboxNext.style.pointerEvents =
     currentPhotoIndex === photos.length - 1 ? "none" : "auto";
 }
@@ -240,6 +306,7 @@ function navigateLightbox(direction) {
   const newIndex = currentPhotoIndex + direction;
   if (newIndex < 0 || newIndex >= photos.length) return;
   currentPhotoIndex = newIndex;
+  preloadNeighbors();
   updateLightboxContent();
 }
 
@@ -261,42 +328,29 @@ function handleLightboxKeyboard(e) {
 }
 
 // ==========================================
-// 7. 灯箱事件绑定
+// 8. 灯箱事件绑定
 // ==========================================
 lightboxClose.addEventListener("click", closeLightbox);
 
 lightboxBackdrop.addEventListener("click", (e) => {
-  // 只点击背景区域才关闭，点击内容区不关闭
-  if (e.target === lightboxBackdrop) {
-    closeLightbox();
-  }
+  if (e.target === lightboxBackdrop) closeLightbox();
 });
 
 lightboxPrev.addEventListener("click", () => navigateLightbox(-1));
 lightboxNext.addEventListener("click", () => navigateLightbox(1));
 
 // ==========================================
-// 8. 触摸手势支持
+// 9. 触摸手势
 // ==========================================
-lightboxEl.addEventListener(
-  "touchstart",
-  (e) => {
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
-    touchMoved = false;
-  },
-  { passive: true }
-);
+lightboxEl.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchMoved = false;
+}, { passive: true });
 
-lightboxEl.addEventListener(
-  "touchmove",
-  (e) => {
-    if (!touchMoved) {
-      touchMoved = true;
-    }
-  },
-  { passive: true }
-);
+lightboxEl.addEventListener("touchmove", (e) => {
+  touchMoved = true;
+}, { passive: true });
 
 lightboxEl.addEventListener("touchend", (e) => {
   if (!lightboxEl.classList.contains("active")) return;
@@ -305,37 +359,29 @@ lightboxEl.addEventListener("touchend", (e) => {
   const deltaX = e.changedTouches[0].clientX - touchStartX;
   const deltaY = e.changedTouches[0].clientY - touchStartY;
 
-  // 水平滑动 > 50px 且大于垂直滑动
   if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY)) {
-    if (deltaX > 0) {
-      navigateLightbox(-1);
-    } else {
-      navigateLightbox(1);
-    }
+    navigateLightbox(deltaX > 0 ? -1 : 1);
   }
 
-  // 向下滑动 > 100px 关闭灯箱
   if (deltaY > 100 && Math.abs(deltaY) > Math.abs(deltaX)) {
     closeLightbox();
   }
 });
 
 // ==========================================
-// 9. 图片加载事件
+// 10. 图片事件
 // ==========================================
 lightboxImg.addEventListener("load", () => {
-  // 图片加载成功，清除超时计时器
   clearImageLoadTimer();
+  lightboxImg.classList.remove("switching");
 });
 
 lightboxImg.addEventListener("error", () => {
-  // 不立即显示错误 —— 等待超时计时器到期后再判断
-  // 超时计时器在 setLightboxImage() 中已启动
-  // 如果超时后仍未加载成功，才会显示错误占位图
+  // 等待超时计时器到期后统一处理
 });
 
 // ==========================================
-// 10. 页面初始化
+// 11. 初始化
 // ==========================================
 async function init() {
   await loadData();
@@ -343,7 +389,6 @@ async function init() {
   renderMasonry();
 }
 
-// DOM 加载完成后初始化
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {

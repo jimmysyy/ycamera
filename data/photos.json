@@ -1,190 +1,10 @@
 {
   "photos": [
     {
-      "id": 1,
-      "thumbnail": "https://picsum.photos/seed/photo1/600/800",
-      "full": "https://picsum.photos/seed/photo1/1800/2400",
-      "title": "晨光山峦",
-      "params": {
-        "光圈": "f/5.6",
-        "ISO": "200",
-        "焦段": "24mm",
-        "快门": "1/320s",
-        "相机": "Sony A7M4",
-        "日期": "2025-03-15",
-        "地点": "黄山"
-      }
-    },
-    {
-      "id": 2,
-      "thumbnail": "https://picsum.photos/seed/photo2/600/900",
-      "full": "https://picsum.photos/seed/photo2/1600/2400",
-      "title": "都市夜色",
-      "params": {
-        "光圈": "f/2.8",
-        "ISO": "800",
-        "焦段": "35mm",
-        "快门": "1/60s",
-        "相机": "Leica Q2",
-        "日期": "2025-05-20",
-        "地点": "上海"
-      }
-    },
-    {
-      "id": 3,
-      "thumbnail": "https://picsum.photos/seed/photo3/600/600",
-      "full": "https://picsum.photos/seed/photo3/1600/1600",
-      "title": "宁静湖畔",
-      "params": {
-        "光圈": "f/8",
-        "ISO": "100",
-        "焦段": "50mm",
-        "快门": "1/250s",
-        "相机": "Canon R5",
-        "日期": "2025-02-10",
-        "地点": "西湖"
-      }
-    },
-    {
-      "id": 4,
-      "thumbnail": "https://picsum.photos/seed/photo4/600/750",
-      "full": "https://picsum.photos/seed/photo4/1600/2000",
-      "title": "街角光影",
-      "params": {
-        "光圈": "f/1.4",
-        "ISO": "400",
-        "焦段": "85mm",
-        "快门": "1/500s",
-        "相机": "Sony A7M4",
-        "日期": "2025-06-01",
-        "地点": "东京"
-      }
-    },
-    {
-      "id": 5,
-      "thumbnail": "https://picsum.photos/seed/photo5/600/1000",
-      "full": "https://picsum.photos/seed/photo5/1500/2500",
-      "title": "极简建筑",
-      "params": {
-        "光圈": "f/4",
-        "ISO": "200",
-        "焦段": "16mm",
-        "快门": "1/200s",
-        "相机": "Fujifilm X-T5",
-        "日期": "2025-04-18",
-        "地点": "北京"
-      }
-    },
-    {
-      "id": 6,
-      "thumbnail": "https://picsum.photos/seed/photo6/600/700",
-      "full": "https://picsum.photos/seed/photo6/1600/1867",
-      "title": "落日余晖",
-      "params": {
-        "光圈": "f/11",
-        "ISO": "100",
-        "焦段": "70mm",
-        "快门": "1/125s",
-        "相机": "Nikon Z8",
-        "日期": "2025-01-28",
-        "地点": "大理"
-      }
-    },
-    {
-      "id": 7,
-      "thumbnail": "https://picsum.photos/seed/photo7/600/850",
-      "full": "https://picsum.photos/seed/photo7/1600/2267",
-      "title": "雨后街道",
-      "params": {
-        "光圈": "f/2.0",
-        "ISO": "640",
-        "焦段": "35mm",
-        "快门": "1/125s",
-        "相机": "Leica M11",
-        "日期": "2025-06-08",
-        "地点": "京都"
-      }
-    },
-    {
-      "id": 8,
-      "thumbnail": "https://picsum.photos/seed/photo8/600/550",
-      "full": "https://picsum.photos/seed/photo8/1800/1650",
-      "title": "山川叠嶂",
-      "params": {
-        "光圈": "f/8",
-        "ISO": "100",
-        "焦段": "100mm",
-        "快门": "1/500s",
-        "相机": "Sony A7RM5",
-        "日期": "2025-03-22",
-        "地点": "张家界"
-      }
-    },
-    {
-      "id": 9,
-      "thumbnail": "https://picsum.photos/seed/photo9/600/900",
-      "full": "https://picsum.photos/seed/photo9/1600/2400",
-      "title": "海岸清晨",
-      "params": {
-        "光圈": "f/16",
-        "ISO": "100",
-        "焦段": "20mm",
-        "快门": "2s",
-        "相机": "Canon R5",
-        "日期": "2025-05-05",
-        "地点": "厦门"
-      }
-    },
-    {
-      "id": 10,
-      "thumbnail": "https://picsum.photos/seed/photo10/600/720",
-      "full": "https://picsum.photos/seed/photo10/1600/1920",
-      "title": "窗边静物",
-      "params": {
-        "光圈": "f/2.8",
-        "ISO": "400",
-        "焦段": "50mm",
-        "快门": "1/160s",
-        "相机": "Fujifilm X-T5",
-        "日期": "2025-04-01",
-        "地点": "家中"
-      }
-    },
-    {
-      "id": 11,
-      "thumbnail": "https://picsum.photos/seed/photo11/600/950",
-      "full": "https://picsum.photos/seed/photo11/1500/2375",
-      "title": "密林深处",
-      "params": {
-        "光圈": "f/4",
-        "ISO": "800",
-        "焦段": "135mm",
-        "快门": "1/250s",
-        "相机": "Nikon Z8",
-        "日期": "2025-02-14",
-        "地点": "西双版纳"
-      }
-    },
-    {
-      "id": 12,
-      "thumbnail": "https://picsum.photos/seed/photo12/600/650",
-      "full": "https://picsum.photos/seed/photo12/1800/1950",
-      "title": "沙漠孤影",
-      "params": {
-        "光圈": "f/8",
-        "ISO": "100",
-        "焦段": "200mm",
-        "快门": "1/1000s",
-        "相机": "Sony A7M4",
-        "日期": "2025-06-12",
-        "地点": "敦煌"
-      }
-    },
-    {
       "id": 13,
-      "thumbnail": "https://p.jmnav.top/photo/DSC_6130.jpg",
-      "full": "https://p.jmnav.top/shuizu-full.webp",
-      "title": "shuizu",
+      "thumbnail": "https://p.yjimmy.cn/shuizu.webp",
+      "full": "https://p.yjimmy.cn/shuizu-full.webp",
+      "title": "水竹新生",
       "params": {
         "光圈": "f/2.8",
         "ISO": "3200",
@@ -199,23 +19,18 @@
   "socialLinks": [
     {
       "name": "Instagram",
-      "url": "https://instagram.com/",
+      "url": "https://www.instagram.com/jinbi.yang/",
       "icon": "instagram"
     },
     {
-      "name": "Twitter / X",
-      "url": "https://x.com/",
-      "icon": "twitter"
+      "name": "小红书",
+      "url": "https://xhslink.com/m/2ggQqwEwIk8",
+      "icon": "xiaohongshu"
     },
     {
-      "name": "500px",
-      "url": "https://500px.com/",
-      "icon": "500px"
-    },
-    {
-      "name": "GitHub",
-      "url": "https://github.com/",
-      "icon": "github"
+      "name": "微博",
+      "url": "https://weibo.com/u/8013751560",
+      "icon": "weibo"
     }
   ]
 }
