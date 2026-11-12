@@ -2,9 +2,14 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="description" content="摄影作品展示">
+  <meta name="theme-color" id="theme-color" content="#f5f5f7">
+  <meta property="og:title" content="JIMMYYANG — Photography">
+  <meta property="og:description" content="摄影作品展示">
+  <meta property="og:type" content="website">
   <title>Photography</title>
+  <script src="js/theme-init.js"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>">
 </head>
@@ -15,20 +20,41 @@
     <div class="header-inner">
       <img
         class="avatar"
+        id="avatar"
         src="images/avatar.jpg"
         alt="Avatar"
         width="44"
         height="44"
         loading="eager"
-        onerror="this.style.display='none'"
+        decoding="async"
       >
       <h1 class="site-title">JIMMYYANG</h1>
+
+      <button
+        class="theme-toggle"
+        id="theme-toggle"
+        type="button"
+        aria-label="切换到暗黑模式"
+        aria-pressed="false"
+        title="切换到暗黑模式"
+      >
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        </svg>
+      </button>
     </div>
   </header>
 
   <!-- ===== 瀑布流照片墙 ===== -->
-  <main class="masonry" id="masonry" aria-label="摄影作品瀑布流">
-    <!-- 由 JS 动态渲染 -->
+  <main class="masonry" id="masonry" aria-label="摄影作品瀑布流" aria-busy="true">
+    <p class="masonry-status" id="masonry-loading">照片加载中…</p>
+    <noscript>
+      <p class="masonry-status">此站点需要启用 JavaScript 才能显示照片。</p>
+    </noscript>
   </main>
 
   <!-- ===== 固定页脚 ===== -->
@@ -40,27 +66,29 @@
 
   <!-- ===== 灯箱覆盖层 ===== -->
   <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="照片查看器">
-    <!-- 毛玻璃背景层 -->
-    <div class="lightbox-backdrop"></div>
+    <!-- 毛玻璃背景层：当前作品的模糊副本 -->
+    <div class="lightbox-backdrop" id="lightbox-backdrop">
+      <img class="lightbox-bg" id="lightbox-bg" alt="" aria-hidden="true" decoding="async">
+    </div>
 
     <!-- 关闭按钮 -->
-    <button class="lightbox-close" id="lightbox-close" aria-label="关闭">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
         <line x1="18" y1="6" x2="6" y2="18"/>
         <line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
     </button>
 
     <!-- 上一张 -->
-    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" aria-label="上一张">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="上一张">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
         <polyline points="15 18 9 12 15 6"/>
       </svg>
     </button>
 
     <!-- 下一张 -->
-    <button class="lightbox-nav lightbox-next" id="lightbox-next" aria-label="下一张">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="下一张">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
         <polyline points="9 18 15 12 9 6"/>
       </svg>
     </button>
@@ -68,7 +96,8 @@
     <!-- 灯箱内容区 -->
     <div class="lightbox-content" id="lightbox-content">
       <div class="lightbox-image-wrap">
-        <img id="lightbox-img" src="" alt="" loading="eager">
+        <!-- 先显示已缓存缩略图，大图加载完成后无缝替换 -->
+        <img class="lightbox-img" id="lightbox-img" alt="" loading="eager" decoding="async">
       </div>
       <div class="lightbox-params" id="lightbox-params">
         <!-- 由 JS 动态渲染 -->
@@ -76,7 +105,7 @@
     </div>
 
     <!-- 照片计数器 -->
-    <div class="lightbox-counter" id="lightbox-counter"></div>
+    <div class="lightbox-counter" id="lightbox-counter" aria-live="polite" aria-atomic="true"></div>
   </div>
 
   <script src="js/main.js"></script>

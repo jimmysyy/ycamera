@@ -1,2 +1,18 @@
 .DS_Store
 网站要求.md
+
+# 本地图片工作目录：图片体积大，禁止提交到 GitHub
+# 目录结构保留（.gitkeep），内容全部忽略
+photos/originals/*
+!photos/originals/.gitkeep
+photos/large/*
+!photos/large/.gitkeep
+photos/thumbs/*
+!photos/thumbs/.gitkeep
+photos/manifest.json
+
+# 构建产物：Cloudflare Pages 只部署 dist/，里面不含 photos/
+dist/
+
+# 依赖
+node_modules/
